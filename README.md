@@ -3,7 +3,7 @@
 1. Introducción al perfilamiento de gen rRNA 16s en comunidades microbianas
    1. Fundamentos teóricos del uso de genes marcadores
    2. Cómo se selecciona una región hipervariable dentro de un gen marcador
-   3. Ventajas y desventajas de uso de genes marcadores
+   3. Ventajas y desventajas del uso de genes marcadores
    4. Ejemplos de uso en casos prácticos
    5. Presentación de proyecto con justificación, hipótesis y objetivo
 2. Introducción al uso de Linux y QIIME2
