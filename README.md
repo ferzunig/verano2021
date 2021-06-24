@@ -32,6 +32,6 @@
    1. Fundamentos teóricos de diversidad alfa y beta
    2. Cálculo de diversidad alfa y beta con QIIME2
    3. Cálculo de diversidad alfa y beta con R
-   4. Análisis estadístico con datos de diversidad alfa y bet
+   4. Análisis estadístico con datos de diversidad alfa y beta
    5. Presentación con los datos del proyecto
 7. Presentación de proyecto final
