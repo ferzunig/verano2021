@@ -1,0 +1,768 @@
+---
+title: "Curso de introducción a bash"
+author: "Tonalli Garcia Santibañez, Rafael Bustamante Brito y Victor Higareda Alvear"
+date: "3/24/2021"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_section: true
+    theme: "cerulean"
+    highlight: "tango"
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages, include=FALSE}
+library(dplyr)
+library(magrittr)
+library(knitr)
+library(flextable)
+```
+
+
+
+# Información sobre este curso
+## Sobre este curso  
+
+Este curso está diseñado con el objetivo de dar a conocer las bases de UNIX/LINUX necesarias para manipular los directorios y archivos, así como su contenido. El conocimiento que se busca adquirir es el primer paso para poder hacer uso del software y edición de archivos en el análisis de datos en linea de comandos.
+
+
+## Motivaciones  
+
+Si te inscribiste a este curso, seguramente es porqué quieres empezar a analizar tus secuencias de DNA o RNA. Es muy posible que ya hayas escuchado alguna de estas palabras: “Unix”, “Linux”, “Línea de comandos” y “Terminal”. Si tu conocimiento no va mas allá de eso estás en el curso adecuado. El uso de la linea de comandos es algo que se debe conocer previo al inicio tus análisis bioinformáticos. Aunque posiblemente en los próximos años veremos un mayor surgimiento de software gráfico para resolver tareas bioinformáticas, hoy en día el uso de la terminal sigue siendo necesario y de gran utilidad.
+
+## Material de este curso  
+
+Este manual forma parte de un curso presencial o en línea sobre introducción a bash. Es un material complementario a las 20 horas que comprenden el curso. Por lo que se recomienda su lectura junto a su participación en el curso.
+
+# Historia sobre Unix y Linux  
+ 
+ Aunque varios de nosotros crecimos con computadoras con sistema operativo Windows, existen otros sistemas que fueron desarrollados antes o a la par que Windows, tal es el caso de Unix. Unix es un sistema operativo multi-usuario, multi-tarea y portable desarrollado en 1969, en los laboratorios Bell de AT&T (Hoy la conocemos más por la telefonía celular). Fue desarrollado por Ken Thompson y Dennis Ritchie.  
+
+Las características de Unix lo hicieron muy popular, su uso (bajo una respectiva licencia), se extendió rápidamente durante los 70´s y 80´s. En esos años, Unix se distribuyó entre universidades y dependencias de gobierno. Una de estás licencias fue adquirida por la Universidad de California, con sede en Berkeley, aquí se hicieron algunas adiciones (programas) y mejoras al Unix de A&T. Estás adiciones llamaron la atención de otros usuarios por lo que empezaron a ser distribuidas, esto bajo el nombre de Berkeley Software Distribution (BSD), parece que esto no fue bien visto por AT&T, ya que inició una demanda contra el Unix de Berkeley.  
+
+En esta misma década (seguimos en los 80s), Richard Stallman, (EUA, MIT), empezó a llamar la atención dentro de la comunidad de programadores. Stallman promovía ideales de software libre (free-software). Con libre se referia a que el usuario debe tener la libertad de modificar y distribuit un sistema operativo u otro programa. Bajo estos ideales, en 1984 comenzó a desarrollar un Sistema operativo denominado GNU (GNU´s not unix, GNU´s no es Unix), motivado también por las restricciones que imponia Unix a sus usuarios.  
+
+Richard Stallman y colaboradores escribieron diferentes utilidades (programas) para este nuevo sistema, excepto el programa que se encargaría de gestionar los recursos del sistema operativo (lo dejaron para más tarde). A este programa se le conoce como kernel (de la raíz germánica Kern, núcleo o hueso). En palabras de Richard Stallman, “kernel is the program in the system that allocates the machine's resources to the other programs that you run”.  
+
+De manera independiente, en 1991 y por motivos personales, un estudiante de la universidad de Helsinki, Linus Torvalds se encontraba desarrollando un kernel al que llamaba informalmente Linux. Este kernel fue el que se fusionó con GNU y dio origen a lo que hoy conocemos como Linux. Algo curioso es que el nombre Linux en realidad se referia al kernel no al sistema operativo, sin embargo fue el nombre que se popularizó. De acuerdo a Richard Stallman el nombre correcto es GNU/Linux. 
+Finalmente ¿Unix y GNU/Linux es lo mismo?  La respuesta es no. El sistema operativo Unix es una marca registrada, solo aquellos sistemas que cumplen con ciertos requisitos y han pagado las regalías correspondientes poden denominarse Unix, aquellos sistemas como GNU/Linux o MacOSX, se les denominá sistemas basados en Unix.   
+
+Actualmente el termino free-software propuesto por Richard Stallman fue superado por el movimiento de código abierto (open source code), cuya filosofia también se basa en darle al usuario la habilidad para ver, editar y distribuir el código bajo ciertos criterios.  
+
+Lo que debes recordar de todo lo anterior, es que todos los sistemas operativos tienen un kernel y utilidades. El kernel es el que controla la memoria de la computadora y asigna una parte a cada proceso, esto hace que los procesos sean más eficientes.   
+Otra de las funciones del kernel es que permitir la comunicación entre software y dispositivos físicos de la computadora.  Con utilidades nos referimos a programas, por ejemplo un procesador de textos, una hoja de calculo juegos entre otros.
+
+
+# ¿Porqué Linux es tan popular en el área bioinformática?
+
+Una de las razones proviene del hecho de que la mayoría de los datos biológicos se representan en forma de texto. Pensemos en secuencias de nucleótidos (A,T,C,G) o la representación de los aminoácidos (A,T,F,M…). Linux cuenta con diversos comandos que pueden combinarse para manipular este tipo de archivos de forma eficiente. Adicionalmente es gratuito, ambas características  han contribuido a su  relevancia en el área bioinformática.
+
+# Colores de Linux
+
+Hoy en día tenemos diferentes “versiones” de Linux, coloquialmente se les conoce como distro (distribución Linux, **Figura 1**). Una de las mas conocidas es Ubuntu, sin embargo, existe una gran diversidad de distros a elegir dependiendo los gustos y necesidades de los usuarios. Algunas de ellas ofrecen mayor soporte para el usuario, aspecto a considerar al momento de elegir un distro.
+<br/><br/>
+```{r, echo=FALSE,fig.align='center'}
+
+fig1 <-c("./Imagenes/Figura1.png")
+knitr::include_graphics(fig1)
+
+
+```
+
+**Figura 1. Algunos distros de GNU/Linux.** Ubuntu probablemente es de los más conocidos. Bio-Linux (no se muestra en la imagen), es un distro que viene con algunos programas instalados que se usan en el área bioinformática. 
+
+El Pingüino "Tux" es la mascota oficial del sistema Linux (**Fig1**). Una historia sobre su nombre es que proviene de las palabras Torval Unix. La otra se refiere a que parece usar un smoking (tuxedo en ingles), abreviado tux.
+
+# Características sobre el funcionamiento de Linux/Unix
+## Shell y línea de comandos
+
+Los sistemas operativos tipo Unix incluyen una interface (Shell). Esta interface nos permite establecer una comunicación con nuestra computadora. En mi caso he personalizado el Shell con un fondo negro y letras verdes, **Figura 2**. Esta apariencia puede cambiar de acuerdo a tus gustos. Regularmente se utilizan de manera similar los términos Shell y terminal para referirse a esta interfaz. Lo importante es que a través del Shell nosotros podemos comunicarnos (darle instrucciones) a nuestro sistema operativo.
+<br/><br/>
+
+
+```{r, echo=FALSE,fig.align='center'}
+
+fig2 <-c("./Imagenes/Figura2.png")
+knitr::include_graphics(fig2)
+
+
+```
+
+**Figura 2. Terminal de Mac OSX**
+
+
+# Comandos
+Un comando es el nombre de programa, cada comando tiene un nombre y ejecuta una tarea especifica, por ejemplo, si escribimos el comando `date` en la terminal, este comando nos va a regresar la fecha y hora, algo importante es que los comandos tienen opciones, estás se agregan frente al nombre del comando.
+
+Cada comando tiene un manual para el usuario al que se puede acceder con el comando `man`
+
+```
+# Åcceder al manual del comando ls
+man ls
+
+```
+
+```{r, echo=FALSE,fig.align='center'}
+
+fig3 <-c("./Imagenes/Figura3.png")
+knitr::include_graphics(fig3)
+```
+
+**Figura 3. Manual del comando `ls`**
+
+
+
+# Organización de archivos y directorios en linux
+## Organización jerarquica en Linux
+
+En Linux la organización de los directorios (conocidos como carpetas o folders en windows), siguen una jerarquía, por lo tanto, todo archivo o directorio creado en Linux estará a su vez contenido dentro de un directorio principal denominado root (raíz), este se representa por el símbolo `/`. 
+Dentro del directorio root. `/`  vamos a encontrar niveles, cada uno de estos niveles representa un directorio. Algunos de estos directorios tienen nombres preestablecidos y contienen archivos que el sistema necesita para funcionar correctamente, por lo que no debemos modificarlos **Figura 3**.
+<br/><br/>
+
+```{r, echo=FALSE,fig.align='center'}
+
+fig4 <-c("./Imagenes/Figura4.png")
+knitr::include_graphics(fig4)
+
+
+```
+
+**Figura 4. Organización jerárquica de los directorios en Linux**. El directorio “mthomas” está dentro del directorio “home” que a su vez esta dentro del directorio raíz.
+
+Algunos directorios ya establecidos por Linux son:
+
+**/bin** Contiene comandos y utilidades  
+
+**/dev** Contiene archivos de dispositivos conectados al sistema 
+
+**/etc** Contiene comandos y archivos usados en la administración del Sistema 
+
+**/lib** Librerías que son utilizadas por diferentes programas o lenguajes 
+
+**/proc** Contiene información sobre los procesos 
+
+**/tmp** Archivos temporales creados por algunos programas 
+
+**/sr** Aquí se encuentran las aplicaciones instaladas por el usuario 
+
+**/home** Es el directorio de cada uno de los usuarios aquí están tus archivos, musica, videos etc
+
+# Rutas de acceso (pathname)
+Cualquier archivo que se cree, estará almacenado en alguno de los subdirectorios del directorio raíz.
+
+A las rutas de acceso que especifícan su ubicación desde el directorio raíz se les denomina ruta absoluta, p ej. **/Users/alberto/Desktop/e_coli_16S.fa**
+
+A las rutas que no especifican el directorio raíz se les denomina rutas relativas, p ej. **Desktop/e_coli_16S.fa**
+El comando que nos imprime en pantalla la ruta en la que estamos encontramos es pwd,  "print working directory"
+
+```
+# Imprimir ruta absoluta
+pwd
+
+```
+
+# Tipos de archivos en Linux
+
+Entre los archivos que más vamos a utilizar en este curso están:
+
+**Archivos regulares:** También se les llama archivos de texto, este documento por ejemplo sería un archivo regular. 
+
+**Archivos ejecutables**: Se refiere a programas, tambien conocidos como scripts, ellos ejecutan tareas especificas. 
+
+**Directorios:**  Los conocemos también como folders o carpetas. Utilizaremos el nombre de directorios para referirnos a ellos. 
+
+**Algo importante a considerar es que en Linux todo es un archivo**
+
+# Manipulación de archivos y directorios
+
+## Archivos regulares (Archivos de texto)
+### Creación de archivos touch
+
+El Comando **touch** se utiliza para crear un archivo el que estará vacio en contenido. Al momento de crear archivos es importante poner una extencion, si es un archivo de texto podemos agregar .txt, si es un archivo que contendrá secuencias de nucleotidos se puede agregar .fna. Esto nos va a permitir tener una idea de lo que contiene ese archivo sin necesidad de abrirlo
+
+```
+# Crea un archivo de texto llamado genomas.txt vacio
+touch genomas.txt
+```
+
+### Copiar archivos `cp`
+
+````
+# Indicamos primero el nombre del archivo y posteriormente la dirección a donde lo queremos copiar.
+cp archivo destino
+````
+
+### Borrar archivos `rm`
+
+`````
+Borramos el archivo genes.txt
+
+rm genes.txt
+`````
+## Mover archivos `mv`
+
+````
+# Movemos el archivo genes.txt afuera de la carpeta
+mv genes.txt ../ 
+
+````
+
+## Renombrar archivos `mv``
+
+````
+# Cambiaremos de nombre al archivo proteínas.txt a genes.txt
+mv proteínas.txt genes.txt  
+
+`````
+
+# Directorio 
+
+## Creación de directorios `mkdir`
+
+El comando `mkdir` cuyo significado es "make directory" nos permite crear un directorio
+````
+# Creamos un directorio llamado prueba
+mkdir prueba  
+
+# Creamos dos directorios al mismo tiempo
+mkdir secuencias genomas  
+
+````
+
+## Crear un directorio dentro de otro
+
+````
+# Creamos el directorio bacteria dentro del directorio genoma
+mkdir -p genoma/bacteria  
+
+`````
+
+## Entrar y salir de un directorio
+
+Para acceder a un directorio utilizamos el comando `cd` seguido del nombre del directorio. Para salir de un directorio utilizamos `cd ..` lo que nos lleva al directorio anterior
+
+````
+#  Entramos al directorio genoma
+cd genoma/    
+#  Si estamos dentro de genoma, lo siguiente nos llevará un directorio atrás.
+cd ..            
+
+# También podemos movernos de un directorio a otro usando la ruta absoluta o relativa
+
+`````
+
+## Copiar directorios `cp -r``
+
+````
+# Al tratarse de un directorio agregamos el argumento -r
+cp -r directorio destino  
+
+`````
+
+## Borrar directorios `rm -r`
+````
+# Borramos el directorio bacteria
+rm -r bacteria           
+````
+
+## Mover directorios `mv`
+
+````
+# Renombrar el directorio genoma a genomas 
+mv  genoma genomas      
+
+````
+
+# Listar contenido de un directorio `ls`
+
+Si estamos dentro de un directorio y queremos ver su contenido, utilizamos el comando `ls`. Algunas de sus opciones de este comando son `-l`,  y `-a`.  Estas opciones acompañan al comando
+
+````
+# Nos da un listado del archivo más otras características entre ellas nombre del usuario que creó el  archivo, fecha, tamaño entre otros 
+ls -l
+# Ordena los archivos por tiempo de modificación 
+ls -t  
+# Muestra todos los archivos incluso los ocultos
+ls -a     
+````
+
+# Comodines y permisos
+
+##  Comodines
+
+Nos facilitan seleccionar archivos en base algunas caracteristicas presentes en el nombre del archivo. Uno de los comodines mas utilizados es `*`.  Representa cualquier tipo de carácter (es), siendo estos letras o números
+
+
+```
+
+#  Listar cualquier archivo con terminación .txt
+
+ls *.txt  
+# Listar cualquier archivo que empiece con el nombre genes seguido de cualquier otra serie de caracteres, pero que incluya la terminación .txt
+
+ls genes*.txt   
+
+```
+
+# Cambiar permisos `chmod`
+
+Cuando listamos el contenido de un directorio `ls -l` obervamos que se compone de 7 columnas. Discutiremos en detalle la primera columna (Figura5) que nos da información acerca de los permisos de los archivos. Los permisos otorgan capacidad a los usuarios para leer (read), modificar (write) y ejecutar los archivos. Esto se vuelve relevante cuando trabajamos en servidores compartidos y queremos otorgar permisos a usuarios específicos. En estos servidores pueden existir grupos de trabajo, en este caso ellos pueden compartir permisos sobre algunos archivos. Adicionalmente podemos dar permiso a todos los usuarios para que modifiquen los archivos.
+
+La primera columna se compone de 10 caracteres (Figura5)
+
+
+
+```{r, echo=FALSE,fig.align='center'}
+
+fig5 <-c("./Imagenes/Figura5.png")
+knitr::include_graphics(fig5)
+
+```
+
+
+**Figura 5** Ejemplo de salida del comando `ls -l`
+
+````
+# Los 3 primeros caracteres (rwx) pertenecen al propietario, los siguientes tres guiones (---) se refieren al grupo, los últimos 3 (--) representan a todos los usuarios
+
+D rwx --- ---     
+
+D=      #Indica que el archivo es un directorio
+r=      #Indica que el propietario puede tener acceso a este archivo (read)
+w=      #Indica que el propietario puede modificar este archivo (read)
+x=      #Indica si el archivo es ejecutable (execute)
+
+`````
+
+El comando `chmod` nos permite modificar los permisos a los archivos.
+
+````
+#Le estamos dando permisos al grupo (g) de poder escribrir sobre esos archivos agregando el simbolo "+"
+chmod g+w nombre_archivo s archivos. 
+ 
+#Permisos a todos (a) para  modificar los archivos
+chmod a+w nombre_archivo
+
+# Quitamos los permisos sustituyendo el símbolo “+” por “-”
+chmod g+w nombre_archivo  
+
+# Hacemos ejecutable el archivo
+chmod u+x nombre_archivo  
+
+`````
+
+# Visualización y edición de contenido de archivos
+
+Existen varios comandos para la visualización del contenido de archivos de texto. Decribirémos los más comunes de acuerdo a su utilidad.
+
+
+## Creación de archivos de texto en nano y vim
+
+Vamos a empezar con dos programas para la creción y edición de archivos. Para esto es importante saber que los archivos y editores de texto a utilizar deben ser de **texto plano**, los archivos no deben de ser creados y/o editados en Word o cualquier otro programa similar ya que estos hacen uso de carácteres especiales que nosotros no vemos, pero estos quedan guardados dentro del texto y por lo tanto no nos serán de utilidad.
+
+### nano
+
+El primer programa a revisar es `nano` (GNU nano), este es un editor de textos que forma parte de la GNU General Public License el cual fue desarrollado por Chris Allegretta bajo el nombre de TIP y posteriormente pasó a llamarse nano. En este programa nosotros podemos crear y editar archivos de texto plano.
+
+Para abrirlo basta con teclear `nano` y nos va a dirigiar al editor de textos (**Figura 6**)
+
+
+```{r, echo=FALSE,fig.align='center'}
+
+fig6 <-c("./Imagenes/Figura6.jpeg")
+knitr::include_graphics(fig6)
+
+```
+
+
+**Figura 6. Pantalla principal de nano**
+
+En la pantalla de `nano` nosotros podemos escribir lo que deseemos. Algunos de los comandos que se utilizan dentro del editor son:
+
+````
+Ctrl+G: Nos imprime la ayuda del programa.
+Ctrl+O: Guarda los cambios realizados.
+Ctrl+X: Salir del programa.
+Alt+U: Deshacer las últimas modificaciones hechas.
+
+````
+**Ejericio**
+
+Abrir nano, escribir "Mi primer linea en texto plano" y guardar el texto (Ctrl + O), te pedira un nombre, escribelo y posteriormente da enter. Ahora cierra nano (Ctrl+X). **Felicidades creaste tu primer archivo con contenido**
+
+
+### Vim
+
+El segundo programa que revisaremos es `vim`, el cual es una versión mejorada de vi (de ahí su nombre: Vi IMproved). Este fue desarrollado por Bram Moolenaar y se le han ido haciendo muchas mejoras. A diferencia de otros editores de texto, vim ofrece una gran variedad de comandos para la edición de archivos, además de que es personalizable y ofrece modos visuales que ayudan a los programadores en la elaboración de código.
+
+Al igual que nano, basta con teclear el comando vim para dirigirnos a la pantalla principal (**Figura 7**)
+
+```{r, echo=FALSE,fig.align='center'}
+
+fig7 <-c("./Imagenes/Figura7.jpeg")
+knitr::include_graphics(fig7)
+
+```
+
+**Figura 7. Pantalla principal de vim**
+
+La pantalla que se muestra en la **Figura 7** es la que se conoce como **modo comandos**, en la cual el programa está en espera de recibir una instrucción. Para empezar a insertar texto sólo basta con oprimir la letra "i" (insert) para comenzar a escribir, en este momento nos encontraremos en el **modo inserción**. Una vez terminado de introducir/escribir todo lo que deseamos debemos oprimir la tecla `esc`, la cuál nos regresa a el **modo comandos**. Ahora  podemos proceder a guardar los cambios realizados empleando el siguiente comando `:wq`. En caso de que no querer  guardar los cambios y salir del editor se procede de la siguiente manera `:q!`. 
+Si sólo abrimos un archivo y no realizamos cambio alguno y deseamos cerrarlo únicamente debemos escribir el siguiente comando `:q`. **Importante**, debemos de estar en la pantalla de modo comandos y no de inserción para realizar las operaciones antes mencionadas.
+
+**Ejercicio**. Crear un archivo que contenga la frase "Mi segunda linea en texto plano"
+
+````
+# Abrir vim, en esta parte estaremos en el modo comandos.
+vim 
+Presionar tecla i     #Ahora nos encontramos en el modo inserción.
+"Mi segunda linea en texto plano"     #Escribamos la frase.
+Presionar `esc`      #Regresamos a la pantalla de modo de comandos.
+Escribir el comando `:wq linea_vim.txt` y daremos ENTER   #En este punto se crea el archivo y se cierra el programa.
+
+````
+
+# Visualización de contenido de archivos
+
+## Comando `more`
+
+El comando more es de los más antiguos y a su vez sigue siendo de los más utilizados. Una de sus características notorias es que imprime el contenido del archivo leido en la pantalla de comandos.
+
+````
+# Visualización del archivo e_coli.gff
+more e_coli.gff   
+
+# Tambien podemos vizualizar los archivos que creamos en nano y vim en el paso anterior
+`````
+
+## Comando `less`
+El comando `less` está basado en su antecesor more pero con características adicionales. Una de las más notorias es que ejecuta una pantalla en donde se visualiza el contenido del archivo.
+
+Se utiliza comúnmente para revisar archivos con contenido extenso, ya que muestra una página a la vez, únicamente la pantalla que se muestra al usuario. Esto significa que no tiene que cargar todo el archivo antes de comenzar a mostrar su contenido. Al sallir del visualizador se limpia todo lo que `less` muestra.
+
+````
+# Visualización del archivo e_coli.gff
+less e_coli.gff 
+`````
+
+## Similitudes entre more y less.
+Los comandos `more` y `less` son muy similares. Aunque `more` es el antecesor, ha recibido actualizaciónes y funciona de manera muy similar a `less`. 
+
+Mismas opciones de navegación dentro de less y more:
+
+
+```{r, echo= FALSE, message=FALSE, warning=FALSE}
+
+Opciones <- c("flecha abajo","flecha arriba","barra espaciadora o f", "b","/patró", "?patrón", "n", "N","g", "Ng","G","h","q")
+
+Acciones <- c("Avanzar línea por línea", "Retroceder línea por línea","Avanzar por página","Retroceder por página","Busca patrón avanzando","Busca patrón retrocediendo","Repetir búsqueda anterior avanzando", "Repetir búsqueda retrocediendo","Ir a la primera línea","Ir a un número de línea ej. 100g va a la línea 100", "	Ir a la última línea","Muestra ayuda", "salir de la visualización")
+
+tabla<- data.frame(Opciones,Acciones)
+
+tabla %>% flextable() %>% autofit() %>% fix_border_issues(part = "all") %>% bold(part = "header") %>%  bg (bg="lightblue", part= "header")
+
+```
+
+
+## comando `cat`
+
+El comando `cat` es utilizado para leer archivos de forma concatenada, esto quiere decir, que muestra varios archivos al mismo tiempo, uno tras otro. Esta característica puede ser de utilidad cuando se quiere comparar el contenido de archivos cortos. Es un visualizador que **imprime todo el contenido** de uno o varios archivos a la vez en la pantalla.
+
+
+````
+# Imprimir en pantalla TODO EL CONTENIDO del archivo
+cat secuencia1.fa   
+# Imprimir TODO EL CONTENIDO de los tres archivos en el orden que se mencionan
+cat secuencia1.fa secuencia2.fa secuencia3.fa 
+````
+
+No es recomendable utilizarlo con archivos extensos, ya que imprime en pantalla todo su contenido hasta su fin, y no permite su navegación.
+
+```{r, echo=FALSE, fig.align="center"}
+
+fig8<- ("./Imagenes/Fig8.png")
+
+knitr::include_graphics(fig8)
+
+```
+
+**Figura 8**. El gatito representa de la cantidad de información que muestran los comandos less, more y cat.
+
+## Comando `head`
+
+Imprime las **primeras** lineas del contenido del archivo. Por defecto imprime 10 líneas, pero puede modificarse el número con la opción `-n [número]`.
+
+````
+# Impresión de las primeras lineas (10 por defecto)
+head secuencia1.fa
+# Impresión de las primeras 5 líneas
+head -n 5 secuencia1.fa   
+````
+
+## Comando `tail`
+Imprime las últimas lineas del contenido del archivo. Por defecto imprime 10 líneas, pero puede modificarse el número con la opción `-n [número]`.
+
+````
+# Impresión de las últimas lineas (10 por defecto)
+tail m_mycoides_16s.fa    
+# Impresión de las ultimas 3 líneas
+tail -n 3 m_mycoides_16s.fa  
+````
+```{r, echo= FALSE, fig.align="Center"}
+
+fig9<-("./Imagenes/Fig9.png")
+
+knitr::include_graphics(fig9)
+
+
+```
+
+**Figura 9**. Los comandos head y tail muestran el inicio y final del contenido de un archivo como la cabeza y cola de un pingüino.
+
+# Búsqueda y extracción de contenido de archivos
+
+En esta sección describirémos dos de los comandos más útiles para la manipulación de contenido.
+
+## Comando `cut`
+
+Permite extraer carácteres, columnas y campos separados por un delimitador, en todas las líneas del contenido del archivo.
+Se utiliza frecuentemente para extraer columnas que contienen información relevante, por ejemplo, la columna que contiene el nombre del gen, o su identificador en el NCBI.
+
+Cuando se desea extraer los carácteres de una posición pueden usarse las opciones `-b` o `-c`. Ambas opciones consideran los espacios o tabuladores como un carácter.
+
+````
+# Imprimir los caracteres del 1 al 50
+cut -c 1-50 genes_s_typhimurium.fa    
+# Imprimir los bytes del 30-50
+cut -b 30-50 genes_s_typhimurium.fa  
+````
+
+Los archivos de tablas generalmente se encuentran delimitados por un carácter especial, por ejemplo `,` o `tabulador`. Cuando se desea extraer campos separados por esos caracteres, se usa la opción `-f`. Esta opción permite extraer campos que no se encuentran en la misma posición de carácter en todas las lineas, pero sí en el mismo número de delimitador.
+
+````
+# Extraer las columnas 3 y 7
+cut -f1,7 genes_s_typhimurium.gff  
+# Si el delimitador es diferente a tabulador se aclara con la opción -d, por ejempo ","
+cut -d "," -f3,7 genes_s_typhimurium.csv 
+
+````
+## Comando `grep`
+
+El comando `grep` permite buscar las líneas que contengan un patrón de interés en un archivo.
+Es de gran utilidad cuando se requiere comprobar si un archivo contiene una palabra, código, patrón; conocer su contexto en la linea; conocer en cuantas aparece un patrón. `grep`proviene de “globally search for a regular expression and print matching lines”.
+
+```
+# Búsquedad de la palabra "16S" en una lista de genes
+grep 16S genes_B_aphidicola.list    
+# Búsquedad de la palabra "rna" en una lista de genes, al agregar la opcion "i", no  importa si está con mayúsculas o minúsculas
+grep -i rna genes_B_aphidicola.list   
+#contar las líneas en las que aparece un patrón
+grep -c ribosomal genes_B_aphidicola.list 
+````
+
+
+# Manipulación de contenido `sed` y `sort`
+
+## Comando `sed`
+El  comando `sed` se usa principalmente en remplazo de texto  por otro dentro en un archivo, sin embargo también nos permite borrar o imprimir lineas especificas. `sed`es una abreviatura de stream editor
+
+```
+# Substitución de la palabra naranja por Orange
+
+sed 's/naranja/Orange/' frutas.txt    
+
+# Impresión de la linea número 3
+sed -n '3p' frutas.txt  
+# Borra la linea número 2
+sed  '2d' frutas.txt    
+# El amperson (&), almacena el texto a encontrar (Banana) y lo complementa con el  nuevo texto "_platano"
+sed  's/Banana/&_platano/' frutas.txt 
+```
+
+## Comando `sort`
+
+Para la mipulación de contenido de archivos es conveniente poder ordenar los datos de acuerdo a nuestros objetivos. El comando `sort` ordena el contenido de un archivo por el "carácter inicial de las líneas o columnas". Las opciones más utilizadas son clasificación "alfanumérica", por "numeración humana" y el inverso de estas.es de utilidad en los siguientes ejemplos:
+
+
+```
+# Ordenar las líneas en base a la columna con el tipo de gen.
+sort -k 3 -d Ca_Mycoplasma_liparidae_GCA_009884515.1.gff 
+
+#Ordenar las líneas de numeración de la posición de los genes en el genoma.
+sort -k 4 -h Ca_Mycoplasma_liparidae_GCA_009884515.1.gff  
+```
+
+# Redirección de salida y tuberías
+
+## Salida estandar y redirección de salida
+
+Empezaremos definiendo la salida estandar (STDOUT), al ejecutar un comando el resultado por default se va a mostrar en la consola de la terminar, es decir, nuestra pantalla del ordenador.
+
+
+```
+La salida del comando ls represante una salida estandar
+rafabust$ ls -l
+total 52
+drwxrwxrwx 1 rafabust rafabust  4096 Feb 19 18:38  CRISPR
+drwxrwxrwx 1 rafabust rafabust  4096 May 30  2018  MDR
+-rwxrwxrwx 1 rafabust rafabust 50318 Sep 14  2017  Presentación1.pptx
+drwxrwxrwx 1 rafabust rafabust  4096 Jan 23  2019  cvpA
+drwxrwxrwx 1 rafabust rafabust  4096 Apr 20  2018 'filogenia miaA'
+drwxrwxrwx 1 rafabust rafabust  4096 Oct 22  2018 'filogenia polygalacturonasa'
+drwxrwxrwx 1 rafabust rafabust  4096 Mar 13  2018 'filogenia salA'
+drwxrwxrwx 1 rafabust rafabust  4096 Aug  5  2018  lysR
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 19  2017 'mammalian cell entry'
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 27  2018 'peptidase m23'
+drwxrwxrwx 1 rafabust rafabust  4096 Nov 19  2018  tonB
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 13  2017 'type ii ss'
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 13  2017  type_iv_ss_prokka
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 13  2017  type_iv_ss_rast
+```
+
+Siempre que se ejecute un comando veremos el resultado en nuestra pantalla, sin embargo nosotros podemos redirigir esta salida y enviarla a un archivo o documento, para esto ocuparemos el símbolo de mayor que `>`, al hacer esto nosotros estaremos creando un nuevo documento con la información de salida del comando que ejecutemos.
+
+
+
+```
+# Crear un archivo que contenga el resultado del comando ls -l y que se llame listado.txt
+
+ls -l > listado.txt
+
+# Vizualizar el contenido del archivo
+
+more listado.txt  
+total 52
+drwxrwxrwx 1 rafabust rafabust  4096 Feb 19 18:38 CRISPR
+drwxrwxrwx 1 rafabust rafabust  4096 May 30  2018 MDR
+-rwxrwxrwx 1 rafabust rafabust 50318 Sep 14  2017 Presentación1.pptx
+drwxrwxrwx 1 rafabust rafabust  4096 Jan 23  2019 cvpA
+drwxrwxrwx 1 rafabust rafabust  4096 Apr 20  2018 filogenia miaA
+drwxrwxrwx 1 rafabust rafabust  4096 Oct 22  2018 filogenia polygalacturonasa
+drwxrwxrwx 1 rafabust rafabust  4096 Mar 13  2018 filogenia salA
+-rwxrwxrwx 1 rafabust rafabust     0 Feb 23 16:27 listado.txt
+drwxrwxrwx 1 rafabust rafabust  4096 Aug  5  2018 lysR
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 19  2017 mammalian cell entry
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 27  2018 peptidase m23
+drwxrwxrwx 1 rafabust rafabust  4096 Nov 19  2018 tonB
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 13  2017 type ii ss
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 13  2017 type_iv_ss_prokka
+drwxrwxrwx 1 rafabust rafabust  4096 Sep 13  2017 type_iv_ss_rast
+```
+El archivo que nosotros creamos contiene el resultado del comando `ls -l`.
+
+Si nosotros deseamos adicionar contenido a un archivo existente lo podemos hacer empleando `>>`, veamos un ejemplo:
+
+````
+# Crearemos dos archios en vim, uno llamado numeros.txt que contenga lo siguiente:
+1
+2
+3
+4
+5
+6
+
+#Y otro archivo llamado faltantes.txt que contenga lo siguiente:
+7
+8
+9
+10
+11
+
+# Posteriormente añadiremos al archivo numeros.txt los numeros que contiene el archivo faltantes.txt. Al ocupar >> estamos indicando que la informacion de
+
+more faltantes.txt >> numeros.txt  faltantes.txt 
+
+#Ahora al abrir el archivo numeros.txt este contiene tambien los numeros que se encontraban en el archivo faltantes.txt.
+
+more numeros.txt 
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+`````
+
+# 6.1 Pipes
+
+El uso de pipes o tuberias es muy común cuando se trabaja en Unix, estas nos sirven para encadenar una serie de comandos para llegar a un resultado en un "sólo paso", es decir, en lugar de teclear todos los comandos por separado, estos se pueden encadenar y hacerlo en "un solo comando" para esto nosotros utilizamos el síbolo "|". Veamos un ejemplo:
+
+````
+# Tenemos un archivo multifasta que contiene secuencias de proteínas, de este archivo  queremos extraer las proteínas ribosomales y después saber cuantas tenemos. Empecemos haciendolo por partes y seguido de esto empleando el uso de tuberias.
+
+
+# Empecemos por extraer las proteinas ribosomales que contiene el archivo empleando grep y creando un archivo nuevo que llamaremos ribosomales.txt
+
+grep "ribosomal protein" GCF_002284945.1_ASM228494v1_protein > ribosomales.txt 
+.faa
+
+more ribosomales.txt 
+
+>WP_018604832.1 50S ribosomal protein L34 [Uliginosibacterium gangwonense]
+>WP_095523304.1 50S ribosomal protein L3 N(5)-glutamine methyltransferase [Candidatus Dactylopiibacterium carminicum]
+>WP_095523490.1 30S ribosomal protein S21 [Candidatus Dactylopiibacterium carminicum]
+>WP_095524063.1 50S ribosomal protein L28 [Candidatus Dactylopiibacterium carminicum]
+>WP_095524064.1 50S ribosomal protein L33 [Candidatus Dactylopiibacterium carminicum]
+>WP_095524081.1 50S ribosomal protein L9 [Candidatus Dactylopiibacterium carminicum]
+
+# Posteriormente con el comando wc contamos cuantas proteinas ribosomales hay.
+wc -l ribosomales.txt   
+58 ribosomales.txt
+
+# Ahora hagamoslo todo en un sólo paso: Encadenamos el resultado del grep al siguiente comando que es wc, con esto extraemos y contamos en una sola operación.
+
+grep "ribosomal protein " GCF_002284945.1_ASM228494v1_protein.faa | wc -l
+
+58
+
+````
+
+# Creación de un script
+
+Un script puede definirse como un código de programación, el cual contiene una serie de comandos u ordenes que se ejecutan de manera secuencial y estos suelen utilizarse para controlar un flujo de trabajo o el comportamiento de programas. Al momento de ejecutarse los comandos contenidos dentro del script son "leídos" por un interprete y este ejecuta los comandos. En Unix los podemos encontrar con la extensión .sh.
+
+Hagamos nuestro primer script:
+
+````
+Crearemos en vim un script que nos haga un directorio llamado ribosomals, nos mueva dentro de ese directorio y copie un archivo que contiene secuencias de proteinas en el (el archivo se localiza un directorio arriba), seguido de esto vamos a extraer las proteinas ribosomales empleando grep y generaremos un nuevo archivo, contaremos cuantas proteinas ribosomales hay en ese nuevo archivo y el resultado se imprimirá en pantalla.
+
+rafabust$ vim cuentas.sh  #Estamos creando un nuevo documento que se llamará cuentas.sh, al darle enter veremos que este se encuentra vacio.
+Dentro de vim escribiremos lo siguiente:
+#!/bin/bash #Esta línea indica el interprete que se usara para leer el script, es necesario pornerla para saber que esta escrito en bash.
+
+echo "Mi primer script"   #Esta linea nos imprimirá en pantalla lo que está entre comillas.
+
+mkdir ribosomals  #Creamos el directorio ribosomals.
+
+cd ribosomals   #Nos movemos dentro de ribosomals.
+
+cp ../GCF_002284945.1_ASM228494v1_protein.faa .   #Copiamos el archivo multifasta de proteinas que se encuentra un directorio arriba.
+
+grep "ribosomal protein" GCF_002284945.1_ASM228494v1_protein.faa > solo_pr.txt    #Extraemos la información que deseamos y creamos un nuevo documento.
+
+echo "Tenemos un total de $(grep -chi ">" solo_pr.txt) proteinas ribosomales"   #Con esta linea nosotros sabremos cuantas proteinas ribosomales tenemos en nuestro archivo.
+
+Al terminar de escribir los comandos salimos de vim guardando los cambios realizados. Oprimiendo la tecla esc para regresar a el modo comandos y tecleando la opción :wq para que guarde los cambios
+
+rafabust$ chmod +x cuentas.sh   #Volvemos ejecutabe el archivo.
+rafabust$ ./cuentas.sh ó sh cuentas.sh    #Podemos ocupar cualquier de las dos opciones para ejecutar el script.
+rafabust$ sh cuentas.sh
+Mi primer script
+Tenemos un total de 58 proteinas ribosomales  #Listo! acabamos de ejecutar nuestro primer script!!
+
+````
+
+
+
+
+
